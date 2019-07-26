@@ -22,7 +22,8 @@ import java.util.Properties
 
 import org.apache.hadoop.io.compress.CompressionCodec
 import org.apache.hadoop.io.{NullWritable, Text}
-import org.apache.hadoop.mapred.SequenceFileOutputFormat
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat
+import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkContext, SparkException}
 
@@ -41,7 +42,9 @@ class IOCommon(val sc:SparkContext) {
          sc.textFile(filename)
 
        case "Sequence" =>
-         sc.sequenceFile[NullWritable, Text](filename).map(_._2.toString)
+         sc.newAPIHadoopFile(filename,
+           classOf[SequenceFileInputFormat[NullWritable, Text]],
+           classOf[NullWritable], classOf[Text]).map(_._2.toString)
 
        case _ => throw new UnsupportedOperationException(s"Unknown inpout format: $input_format")
      }
@@ -60,10 +63,9 @@ class IOCommon(val sc:SparkContext) {
        case "Sequence" =>
          val sequence_data = data.map(x => (NullWritable.get(), new Text(x.toString)))
          if (output_format_codec.isEmpty) {
-           sequence_data.saveAsHadoopFile[SequenceFileOutputFormat[NullWritable, Text]](filename)
+           sequence_data.saveAsNewAPIHadoopFile[SequenceFileOutputFormat[NullWritable, Text]](filename)
          } else {
-           sequence_data.saveAsHadoopFile[SequenceFileOutputFormat[NullWritable, Text]](filename,
-             output_format_codec.get)
+           sequence_data.saveAsNewAPIHadoopFile[SequenceFileOutputFormat[NullWritable, Text]](filename)
          }
 
        case _ => throw new UnsupportedOperationException(s"Unknown output format: $output_format")
