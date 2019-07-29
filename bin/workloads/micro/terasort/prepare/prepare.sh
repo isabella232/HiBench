@@ -26,6 +26,9 @@ show_bannar start
 rmr_hdfs $INPUT_HDFS || true
 START_TIME=`timestamp`
 run_hadoop_job ${HADOOP_EXAMPLES_JAR} teragen \
+    -D mapreduce.terasort.output.replication=${NUM_REPLICAS} \
+    -D dfs.replication=${NUM_REPLICAS} \
+    -D dfs.namenode.replication.min=${NUM_REPLICAS} \
     -D mapreduce.job.maps=${NUM_MAPS} \
     -D mapreduce.job.reduces=${NUM_REDS} \
     ${DATASIZE} ${INPUT_HDFS}

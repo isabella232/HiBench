@@ -32,6 +32,7 @@ HiBenchEnvPropMappingMandatory=dict(
     SPARKBENCH_JAR="hibench.sparkbench.jar",
     NUM_MAPS="hibench.default.map.parallelism",
     NUM_REDS="hibench.default.shuffle.parallelism",
+    NUM_REPLICAS="hibench.default.hdfs.replication",
     INPUT_HDFS="hibench.workload.input",
     OUTPUT_HDFS="hibench.workload.output",
 

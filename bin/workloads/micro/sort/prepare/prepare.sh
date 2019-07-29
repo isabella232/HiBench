@@ -29,6 +29,8 @@ START_TIME=`timestamp`
 run_hadoop_job ${HADOOP_EXAMPLES_JAR} randomtextwriter \
     -D mapreduce.randomtextwriter.totalbytes=${DATASIZE} \
     -D mapreduce.randomtextwriter.bytespermap=$(( ${DATASIZE} / ${NUM_MAPS} )) \
+    -D dfs.replication=${NUM_REPLICAS} \
+    -D dfs.namenode.replication.min=${NUM_REPLICAS} \
     -D mapreduce.job.maps=${NUM_MAPS} \
     -D mapreduce.job.reduces=${NUM_REDS} \
     ${INPUT_HDFS}

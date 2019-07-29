@@ -28,6 +28,9 @@ rmr_hdfs $OUTPUT_HDFS || true
 SIZE=`dir_size $INPUT_HDFS`
 START_TIME=`timestamp`
 run_hadoop_job ${HADOOP_EXAMPLES_JAR} terasort \
+    -D mapreduce.terasort.output.replication=${NUM_REPLICAS} \
+    -D dfs.replication=${NUM_REPLICAS} \
+    -D dfs.namenode.replication.min=${NUM_REPLICAS} \
     -D mapreduce.job.reduces=${NUM_REDS} \
     ${INPUT_HDFS} ${OUTPUT_HDFS}
 END_TIME=`timestamp`
